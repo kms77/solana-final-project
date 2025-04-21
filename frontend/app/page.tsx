@@ -1,172 +1,15 @@
 "use client"
 
-import type React from "react"
+import Link from "next/link"
+
 import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
+import Image from "next/image"
+import { Github, ChevronDown, Code, Users, Zap } from "lucide-react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
-// Replace Next.js Image with standard img
-const Image = ({
-  src,
-  alt,
-  fill,
-  className,
-  priority,
-}: {
-  src: string
-  alt: string
-  fill?: boolean
-  className?: string
-  priority?: boolean
-}) => {
-  const imgStyle = fill ? { width: "100%", height: "100%", objectFit: "contain" } : {}
-  return <img src={src || "/placeholder.svg"} alt={alt} style={imgStyle as React.CSSProperties} className={className} />
-}
-
-// Replace Next.js Link with standard a
-const Link = ({
-  href,
-  className,
-  children,
-}: {
-  href: string
-  className?: string
-  children: React.ReactNode
-}) => {
-  return (
-    <a href={href} className={className}>
-      {children}
-    </a>
-  )
-}
-
-// Icons
-const Github = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
-    <path d="M9 18c-4.51 2-5-2-7-2"></path>
-  </svg>
-)
-
-const ChevronDown = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="m6 9 6 6 6-6" />
-  </svg>
-)
-
-const Code = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="16 18 22 12 16 6"></polyline>
-    <polyline points="8 6 2 12 8 18"></polyline>
-  </svg>
-)
-
-const Users = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-    <circle cx="9" cy="7" r="4"></circle>
-    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-  </svg>
-)
-
-const Zap = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-  </svg>
-)
-
-// Button component
-const Button = ({
-  children,
-  className,
-  onClick,
-}: {
-  children: React.ReactNode
-  className?: string
-  onClick?: () => void
-}) => {
-  return (
-    <button
-      className={`inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 ${className}`}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  )
-}
-
-// Card components
-const Card = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-  return <div className={`rounded-xl border bg-card text-card-foreground shadow ${className}`}>{children}</div>
-}
-
-const CardHeader = ({ children }: { children: React.ReactNode }) => {
-  return <div className="flex flex-col space-y-1.5 p-6">{children}</div>
-}
-
-const CardTitle = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-  return <h3 className={`font-semibold leading-none tracking-tight ${className}`}>{children}</h3>
-}
-
-const CardDescription = ({ children, className }: { children: React.ReactNode; className?: string }) => {
-  return <p className={`text-sm text-muted-foreground ${className}`}>{children}</p>
-}
-
-const CardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="p-6 pt-0">{children}</div>
-}
-
-function App() {
+export default function Home() {
   // Animation variants
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
@@ -189,7 +32,7 @@ function App() {
   }
 
   // Background pattern animation
-  const [dots, setDots] = useState<Array<{ id: number; active: boolean; delay: number }>>([])
+  const [dots, setDots] = useState([])
 
   useEffect(() => {
     // Generate random dots for the background pattern
@@ -273,20 +116,17 @@ function App() {
             <motion.div
               className="relative w-40 h-40"
               whileHover={{ scale: 1.05 }}
-              transition={{ 
-                type: "tween",
-                ease: "easeInOut",
-                duration: 2,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop"
-              }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
               animate={{
-                y: [0, -15, 0], // Reduced to 3 keyframes with more pronounced movement
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Number.POSITIVE_INFINITY,
+                repeatType: "loop",
               }}
             >
-              <div className="w-full h-full relative">
-                <Image src="/logo.png" alt="TheCollaborators Logo" fill className="object-contain" priority />
-              </div>
+              <Image src="/images/logo.png" alt="TheCollaborators Logo" fill className="object-contain" priority />
             </motion.div>
 
             {/* App Name */}
@@ -311,7 +151,7 @@ function App() {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <Button className="w-full bg-gradient-to-r from-cyan-400 to-teal-400 text-black hover:from-cyan-500 hover:to-teal-500 transition-all duration-300 py-6 text-lg flex items-center justify-center gap-2">
-                <Github />
+                <Github className="w-5 h-5" />
                 Sign in with GitHub
               </Button>
             </motion.div>
@@ -345,7 +185,7 @@ function App() {
               repeatType: "loop",
             }}
           >
-            <ChevronDown />
+            <ChevronDown className="text-cyan-400 w-6 h-6" />
           </motion.div>
         </motion.div>
       </section>
@@ -375,17 +215,17 @@ function App() {
           >
             {[
               {
-                icon: <Code />,
+                icon: <Code className="w-10 h-10 text-cyan-400" />,
                 title: "Code Together",
                 description: "Real-time collaborative coding environment with syntax highlighting and version control.",
               },
               {
-                icon: <Users />,
+                icon: <Users className="w-10 h-10 text-teal-400" />,
                 title: "Team Management",
                 description: "Organize your team, assign roles, and track progress all in one place.",
               },
               {
-                icon: <Zap />,
+                icon: <Zap className="w-10 h-10 text-cyan-400" />,
                 title: "Instant Deployment",
                 description: "Deploy your projects with a single click to any major cloud provider.",
               },
@@ -393,7 +233,7 @@ function App() {
               <motion.div key={index} variants={staggerItem}>
                 <Card className="bg-zinc-800 border-zinc-700 hover:border-cyan-400/50 transition-all duration-300">
                   <CardHeader>
-                    <div className="mb-4 w-10 h-10 text-cyan-400">{feature.icon}</div>
+                    <div className="mb-4">{feature.icon}</div>
                     <CardTitle>{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -554,7 +394,7 @@ function App() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center gap-2 mb-6 md:mb-0">
               <div className="relative w-8 h-8">
-                <Image src="/logo.png" alt="TheCollaborators Logo" fill className="object-contain" />
+                <Image src="/images/logo.png" alt="TheCollaborators Logo" fill className="object-contain" />
               </div>
               <span className="font-bold">TheCollaborators</span>
             </div>
@@ -588,23 +428,8 @@ function App() {
         transition={{ delay: 2 }}
         whileHover={{ scale: 1.1 }}
       >
-<svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="24"
-  height="24"
-  viewBox="0 0 24 24"
-  fill="none"
-  stroke="currentColor"
-  strokeWidth="2"
-  strokeLinecap="round"
-  strokeLinejoin="round"
-  className="w-6 h-6 transform rotate-180"
->
-  <path d="m6 9 6 6 6-6" />
-</svg>
+        <ChevronDown className="w-6 h-6 transform rotate-180" />
       </motion.button>
     </div>
   )
 }
-
-export default App
