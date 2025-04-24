@@ -17,7 +17,7 @@ class RegisterController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function sign_in(Request $request)
+    public function signIn(Request $request)
     {
         $url = Socialite::driver('github')->stateless()->redirect()->getTargetUrl();
         return response()->json([
@@ -26,7 +26,7 @@ class RegisterController extends Controller
         ], 200);
     }
 
-    public function sign_in_callback(Request $request)
+    public function signInCallback(Request $request)
     {
         $github_user = Socialite::driver('github')->stateless()->user();
 
