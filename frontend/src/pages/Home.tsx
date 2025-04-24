@@ -23,7 +23,7 @@ export default function Home() {
                                 className="object-contain"
                                 style={{ position: 'absolute', height: '100%', width: '100%', left: 0, top: 0, right: 0, bottom: 0 }}
                                 // Corrected path to logo in public folder
-                                src="/logo.png"
+                                src="/IMG_6498.png"
                             />
                         </div>
                         <h1 className="text-4xl font-bold text-cyan-600 tracking-tight bg-linear-to-r from-cyan-400 to-teal-400 bg-clip-text">TheCollaborators</h1>
