@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Home() {
     return (
@@ -14,15 +15,14 @@ export default function Home() {
             {/* New styled button */}
             <div className="absolute w-[99px] h-[50px]">
                 <div className="invisible w-full h-full bg-[#3DD3C4] rounded-[41px]"></div>
-                <button
-                    type="button"
-                    className="absolute top-0 left-0 w-full h-full bg-[#3DD3C4] rounded-[41px] text-black text-[24px] font-normal font-roboto flex items-center justify-center"
+                <Link
+                    to="/dashboard"
+                    className="absolute top-0 left-0 w-full h-full bg-[#3DD3C4] rounded-[41px] text-black text-[17px] font-normal font-roboto flex items-center justify-center"
                     style={{ boxShadow: '0px 0px 13.2px 10px rgba(61, 211, 196, 0.5)' }}
                 >
-                    Button
-                </button>
+                    Dashboard
+                </Link>
             </div>
-
         </div>
     );
 }
