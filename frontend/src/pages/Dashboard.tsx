@@ -2,6 +2,7 @@
 import WalletConnect from "../components/WalletConnect"; 
 import ProfileCard from "../components/ProfileCard";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
     date: new Date(Date.now() - (84 - i) * 86400000),
@@ -14,6 +15,7 @@ export default function Dashboard() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
     const [tokensClaimed, setTokensClaimed] = useState<number>(0);
+    const navigate = useNavigate(); // Get navigate function
 
     const totalCommits = mockCommitData.reduce(
         (sum, day) => sum + day.count,
@@ -24,7 +26,15 @@ export default function Dashboard() {
     return (
         <div className="min-h-screen bg-black text-white p-8">
             <div className="flex justify-between items-start mb-6">
-                <h1 className="text-4xl">Dashboard</h1>
+                <div className="flex items-center gap-4"> {/* Wrap title and button */}
+                    <button
+                        onClick={() => navigate(-1)} // Go back one step in history
+                        className="px-3 py-1 bg-zinc-700 hover:bg-zinc-600 rounded text-sm"
+                    >
+                        &larr; Back {/* Left arrow */}
+                    </button>
+                    <h1 className="text-4xl">Dashboard</h1>
+                </div>
                 {/* Use the new WalletConnect component */}
                 <WalletConnect />
             </div>
