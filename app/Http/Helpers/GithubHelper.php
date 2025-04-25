@@ -12,7 +12,7 @@ class GithubHelper
 
         // get the current date and the date of the previous month
         $currentDate = Carbon::now();
-        $previousMonthDate = Carbon::now()->subMonth();
+        $previousMonthDate = Carbon::now()->subYear();
 
         // initialize all days in the range with 0 commits
         $dateRange = [];

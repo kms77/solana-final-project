@@ -36,6 +36,7 @@ class RegisterController extends Controller
             [
                 'name' => $github_user->name,
                 'email' => $github_user->email,
+                'username' => $github_user->nickname, 
                 'avatar' => $github_user->avatar,
                 'password' => Hash::make('Parola123!'),
             ]
@@ -47,7 +48,8 @@ class RegisterController extends Controller
         // return the token to the frontend
         return response()->json([
             'success' => true,
-            'token' => $token
+            'token' => $token,
+            'user' => $user
         ], 200);
     }
 }

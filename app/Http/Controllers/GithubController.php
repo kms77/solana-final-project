@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Helpers\GithubHelper;
+use Illuminate\Support\Facades\Auth;
 
 class GithubController extends Controller
 {
@@ -21,6 +22,9 @@ class GithubController extends Controller
         $repo = $request->repo;
         $token = $request->token;
 
+        // Get the authenticated user
+        $user = Auth::user();
+
         try {
             $apiURL = "https://api.github.com/repos/$owner/$repo/commits";
             // make the API call to GitHub
@@ -33,13 +37,6 @@ class GithubController extends Controller
         if ($response->successful()) {
             $commits = $response->json();
 
-            $filteredCommits = collect($response->json())->map(function ($commit) {
-                return [
-                    'author' => $commit['commit']['author'] ?? null,
-                    'message' => $commit['commit']['message'] ?? null,
-                ];
-            });
-
             $total_commits = count($commits);
 
             // compute the report data using GithubHelper
@@ -50,8 +47,14 @@ class GithubController extends Controller
 
             return response()->json([
                 'success' => true,
-                'commits' => $filteredCommits,
                 'report_data' => $report,
+                'user' => [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'username' => $user->username,
+                    'avatar' => $user->avatar,
+                    'since' => $user->created_at->format('d-m-Y')
+                ],
                 'total_commits' => $total_commits,
                 'tokens' => $tokens,
             ]);

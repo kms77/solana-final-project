@@ -17,6 +17,7 @@ Route::get('/test', function (Request $request) {
     ], 200);
 });
 
-Route::prefix('github')->group(function () {
+
+Route::prefix('github')->middleware('auth:sanctum')->group(function () {
     Route::get('/data', [GithubController::class, 'getGithubData']);
 });
