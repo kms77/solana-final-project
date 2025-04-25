@@ -1,11 +1,7 @@
+
+import WalletConnect from "../components/WalletConnect"; 
+import ProfileCard from "../components/ProfileCard";
 import { useState } from "react";
-import { useWallet } from "@solana/wallet-adapter-react";
-import {
-    WalletMultiButton,
-    WalletDisconnectButton,
-} from "@solana/wallet-adapter-react-ui";
-import Button from "../components/Button";
-import { Link } from "react-router-dom"; // Import Link
 
 const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
     date: new Date(Date.now() - (84 - i) * 86400000),
@@ -18,57 +14,29 @@ export default function Dashboard() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
     const [tokensClaimed, setTokensClaimed] = useState<number>(0);
-    const { publicKey } = useWallet(); // Use the hook to get wallet state
 
-    // Add these calculations inside the component
     const totalCommits = mockCommitData.reduce(
         (sum, day) => sum + day.count,
         0
     );
     const tokensHeld = Math.floor(totalCommits / 10);
 
-    // Function to shorten the wallet address for display
-    const shortenAddress = (address: string, chars = 4): string => {
-        return `${address.substring(0, chars)}...${address.substring(
-            address.length - chars
-        )}`;
-    };
-
     return (
         <div className="min-h-screen bg-black text-white p-8">
-            <h1 className="text-4xl mb-6">Dashboard</h1>
+            <div className="flex justify-between items-start mb-6">
+                <h1 className="text-4xl">Dashboard</h1>
+                {/* Use the new WalletConnect component */}
+                <WalletConnect />
+            </div>
 
-            <div className="flex items-center gap-4">
-                {/* Conditionally render connect/disconnect buttons */}
-                {!publicKey ? (
-                    <WalletMultiButton style={{ backgroundColor: "#0ea5e9" }} />
-                ) : (
-                    <>
-                        <span className="text-sm font-mono bg-zinc-800 px-3 py-1.5 rounded">
-                            {shortenAddress(publicKey.toBase58())}
-                        </span>
-                        <WalletDisconnectButton
-                            style={{
-                                backgroundColor: "#dc2626",
-                                color: "white",
-                            }}
-                        />
-                    </>
-                )}
-            </div>
-            {/* Profile Section */}
-            <div className="flex flex-col items-center mb-10">
-                <img
-                    src="https://www.gravatar.com/avatar/?d=mp&s=120"
-                    alt="Profile"
-                    className="w-28 h-28 rounded-full border-4 border-zinc-800 shadow-lg mb-4"
-                />
-                <div className="text-2xl font-bold">Moldovan Catalin 🐲</div>
-                <div className="text-lg text-gray-300">@CataM2k</div>
-                <div className="text-md text-gray-400 mt-1">
-                    Member since 20th April, 2025
-                </div>
-            </div>
+            {/* Use the new ProfileCard component */}
+            <ProfileCard
+                imageUrl={userProfile.imageUrl}
+                name={userProfile.name}
+                username={userProfile.username}
+                memberSince={userProfile.memberSince}
+                className="mb-10" // Pass margin bottom as className
+            />
 
             {/* Main Grid */}
             <div>
@@ -469,3 +437,11 @@ export default function Dashboard() {
         </div>
     );
 }
+
+// Example profile data (replace with actual data source if available)
+const userProfile = {
+    imageUrl: "https://www.gravatar.com/avatar/?d=mp&s=120",
+    name: "Moldovan Catalin 🐲",
+    username: "@CataM2k",
+    memberSince: "Member since 20th April, 2025", // This seems like a future date?
+};
