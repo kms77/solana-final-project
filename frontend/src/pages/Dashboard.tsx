@@ -14,7 +14,7 @@ export default function Dashboard() {
     
     // Add these calculations inside the component
     const totalCommits = mockCommitData.reduce((sum, day) => sum + day.count, 0);
-    const tokensHeld = Math.floor(totalCommits / 10);
+    const [tokensHeld, setTokensHeld] = useState<number>(Math.floor(totalCommits / 10));
 
     return (
         <div className="min-h-screen bg-black text-white p-8">
@@ -139,11 +139,15 @@ export default function Dashboard() {
                                                     }}
                                                 >
                                                     {activeIndex === weekIndex * 7 + dayIndex && (
-                                                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-800 p-2 rounded text-xs text-gray-100 border border-gray-600 z-30 min-w-[120px]">
-                                                            {count} commits on {cellDate.toLocaleDateString('en-US', {
-                                                                month: 'short',
-                                                                day: 'numeric'
-                                                            })}
+                                                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-800 p-2 rounded text-xs text-gray-100 border border-gray-600 z-30 min-w-[140px]">
+                                                            <div className="font-medium">{count} commits</div>
+                                                            <div className="text-gray-400">
+                                                                {cellDate.toLocaleDateString('en-US', {
+                                                                    month: 'short',
+                                                                    day: 'numeric',
+                                                                    year: 'numeric'
+                                                                })}
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>
@@ -243,7 +247,10 @@ export default function Dashboard() {
                                     </div>
                                     <button 
                                         className="ml-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-md disabled:opacity-50"
-                                        onClick={() => setTokensClaimed(prev => prev + tokensHeld)}
+                                        onClick={() => {
+                                            setTokensClaimed(prev => prev + tokensHeld);
+                                            setTokensHeld(0);  // Reset held tokens after claiming
+                                        }}
                                         disabled={tokensHeld === 0}
                                     >
                                         Claim All

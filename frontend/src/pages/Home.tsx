@@ -20,7 +20,7 @@ export default function Home() {
             {/* Background Grid - Omitted as it's complex and potentially dynamic */}
             {/* <div className="absolute inset-0 opacity-20 pointer-events-none"> ... </div> */}
 
-            {/* Hero Section - Replicated from HeroSection.html */}
+            {/* Hero Section */}
             <section className="min-h-screen flex flex-col items-center justify-center relative">
                 <div className="absolute top-10 left-10 w-16 h-16 border-t-2 border-l-2 border-cyan-400 rounded-tl-xl" style={{ opacity: 1, transform: 'none' }}></div>
                 <div className="absolute top-10 right-10 w-16 h-16 border-t-2 border-r-2 border-teal-400 rounded-tr-xl" style={{ opacity: 1, transform: 'none' }}></div>
@@ -55,7 +55,8 @@ export default function Home() {
                         <p className="text-gray-400 text-center mt-4" style={{ opacity: 1 }}>Collaborate seamlessly. Build together.</p>
                     </div>
                 </div>
-                <div className="absolute bottom-10 transform -translate-x-1/2 flex flex-col items-center cursor-pointer" style={{ opacity: 1 }}>
+                {/* Updated scroll indicator container */}
+                <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center cursor-pointer" style={{ opacity: 1 }}>
                     <p className="text-gray-400 mb-2 text-sm">Scroll to explore</p>
                     <div style={{ transform: 'translateY(4.09984px)' }}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down text-cyan-400 w-6 h-6">
@@ -78,7 +79,9 @@ export default function Home() {
                             <div className="rounded-lg border text-card-foreground shadow-sm bg-zinc-800 border-zinc-700 hover:border-cyan-400/50 transition-all duration-300">
                                 <div className="flex flex-col space-y-1.5 p-6">
                                     <div className="mb-4">
-                                        {/* SVG omitted */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>
+                                        </svg>
                                     </div>
                                     <div className="text-2xl font-semibold leading-none tracking-tight">Code Together</div>
                                 </div>
@@ -87,12 +90,15 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
+                        
                         {/* Feature 2 */}
                         <div>
-                            <div className="rounded-lg border text-card-foreground shadow-sm bg-zinc-800 border-zinc-700 hover:border-cyan-400/50 transition-all duration-300">
+                            <div className="rounded-lg border text-card-foreground shadow-sm bg-zinc-800 border-zinc-700 hover:border-teal-400/50 transition-all duration-300">
                                 <div className="flex flex-col space-y-1.5 p-6">
                                     <div className="mb-4">
-                                        {/* SVG omitted */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                        </svg>
                                     </div>
                                     <div className="text-2xl font-semibold leading-none tracking-tight">Team Management</div>
                                 </div>
@@ -101,12 +107,15 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
+                        
                         {/* Feature 3 */}
                         <div>
                             <div className="rounded-lg border text-card-foreground shadow-sm bg-zinc-800 border-zinc-700 hover:border-cyan-400/50 transition-all duration-300">
                                 <div className="flex flex-col space-y-1.5 p-6">
                                     <div className="mb-4">
-                                        {/* SVG omitted */}
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#06b6d4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M15 7h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-2"/><path d="M6 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h1"/><path d="m11 7-3 5h4l-3 5"/><line x1="22" x2="22" y1="11" y2="13"/>
+                                        </svg>
                                     </div>
                                     <div className="text-2xl font-semibold leading-none tracking-tight">Instant Deployment</div>
                                 </div>
