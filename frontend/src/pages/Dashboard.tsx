@@ -16,12 +16,15 @@ export default function Dashboard() {
     const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
     const [tokensClaimed, setTokensClaimed] = useState<number>(0);
     const navigate = useNavigate(); // Get navigate function
-
-    const totalCommits = mockCommitData.reduce(
-        (sum, day) => sum + day.count,
-        0
-    );
-    const tokensHeld = Math.floor(totalCommits / 10);
+    const totalCommits = mockCommitData.reduce((sum, day) => sum + day.count, 0);
+    const [tokensHeld, setTokensHeld] = useState<number>(Math.floor(totalCommits / 10));
+    const userProfile = {
+        imageUrl: "https://www.gravatar.com/avatar/?d=mp&s=120",
+        name: "Moldovan Catalin 🐲",
+        username: "@CataM2k",
+        memberSince: "Member since 20th April, 2025", // This seems like a future date?
+    };
+    
 
     return (
         <div className="min-h-screen bg-black text-white p-8">
@@ -184,72 +187,46 @@ export default function Dashboard() {
                                                         ? dayData.count
                                                         : 0;
 
-                                                    return (
-                                                        <div
-                                                            key={
-                                                                weekIndex +
-                                                                "-" +
-                                                                dayIndex
-                                                            }
-                                                            className="rounded-[3px] cursor-pointer relative transition-all duration-200"
-                                                            style={{
-                                                                backgroundColor:
-                                                                    colors[
-                                                                        Math.min(
-                                                                            count,
-                                                                            4
-                                                                        )
-                                                                    ],
-                                                                width: "100%",
-                                                                height: "24px",
-                                                                opacity:
-                                                                    hoveredWeek ===
-                                                                    null
-                                                                        ? count ===
-                                                                          0
-                                                                            ? 0.4
-                                                                            : 1
-                                                                        : weekIndex ===
-                                                                          hoveredWeek
-                                                                        ? 1
-                                                                        : 0.4,
-                                                            }}
-                                                            onMouseEnter={() => {
-                                                                setActiveIndex(
-                                                                    weekIndex *
-                                                                        7 +
-                                                                        dayIndex
-                                                                );
-                                                                setHoveredWeek(
-                                                                    weekIndex
-                                                                );
-                                                            }}
-                                                            onMouseLeave={() => {
-                                                                setActiveIndex(
-                                                                    null
-                                                                );
-                                                                setHoveredWeek(
-                                                                    null
-                                                                );
-                                                            }}
-                                                        >
-                                                            {activeIndex ===
-                                                                weekIndex * 7 +
-                                                                    dayIndex && (
-                                                                <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-800 p-2 rounded text-xs text-gray-100 border border-gray-600 z-30 min-w-[120px]">
-                                                                    {count}{" "}
-                                                                    commits on{" "}
-                                                                    {cellDate.toLocaleDateString(
-                                                                        "en-US",
-                                                                        {
-                                                                            month: "short",
-                                                                            day: "numeric",
-                                                                        }
-                                                                    )}
-                                                                </div>
-                                                            )}
+                                            return (
+                                                <div
+                                                    key={weekIndex + '-' + dayIndex}
+                                                    className="rounded-[3px] cursor-pointer relative transition-all duration-200"
+                                                    style={{
+                                                        backgroundColor: colors[Math.min(count, 4)],
+                                                        width: '100%',
+                                                        height: '24px',
+                                                        opacity:
+                                                            hoveredWeek === null
+                                                                ? count === 0
+                                                                    ? 0.4
+                                                                    : 1
+                                                                : weekIndex === hoveredWeek
+                                                                ? 1
+                                                                : 0.4
+                                                    }}
+                                                    onMouseEnter={() => {
+                                                        setActiveIndex(weekIndex * 7 + dayIndex);
+                                                        setHoveredWeek(weekIndex);
+                                                    }}
+                                                    onMouseLeave={() => {
+                                                        setActiveIndex(null);
+                                                        setHoveredWeek(null);
+                                                    }}
+                                                >
+                                                    {activeIndex === weekIndex * 7 + dayIndex && (
+                                                        <div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 bg-gray-800 p-2 rounded text-xs text-gray-100 border border-gray-600 z-30 min-w-[140px]">
+                                                            <div className="font-medium">{count} commits</div>
+                                                            <div className="text-gray-400">
+                                                                {cellDate.toLocaleDateString('en-US', {
+                                                                    month: 'short',
+                                                                    day: 'numeric',
+                                                                    year: 'numeric'
+                                                                })}
+                                                            </div>
                                                         </div>
-                                                    );
+                                                    )}
+                                                </div>
+                                                );
                                                 }
                                             )
                                     )}
@@ -429,11 +406,10 @@ export default function Dashboard() {
                                     </div>
                                     <button
                                         className="ml-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-md disabled:opacity-50"
-                                        onClick={() =>
-                                            setTokensClaimed(
-                                                (prev) => prev + tokensHeld
-                                            )
-                                        }
+                                        onClick={() => {
+                                            setTokensClaimed(prev => prev + tokensHeld);
+                                            setTokensHeld(0);  // Reset held tokens after claiming
+                                        }}
                                         disabled={tokensHeld === 0}
                                     >
                                         Claim All
@@ -448,10 +424,4 @@ export default function Dashboard() {
     );
 }
 
-// Example profile data (replace with actual data source if available)
-const userProfile = {
-    imageUrl: "https://www.gravatar.com/avatar/?d=mp&s=120",
-    name: "Moldovan Catalin 🐲",
-    username: "@CataM2k",
-    memberSince: "Member since 20th April, 2025", // This seems like a future date?
-};
+
