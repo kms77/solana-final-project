@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
   date: new Date(Date.now() - (84 - i) * 86400000),
@@ -15,6 +16,27 @@ export default function Dashboard() {
     // Add these calculations inside the component
     const totalCommits = mockCommitData.reduce((sum, day) => sum + day.count, 0);
     const tokensHeld = Math.floor(totalCommits / 10);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const authToken = localStorage.getItem('auth_token');
+        if (!authToken){
+            navigate('/', { replace: true });
+        }
+        const queryParams = new URLSearchParams(location.search);
+        const token = queryParams.get('token');
+
+        if (token) {
+            localStorage.setItem('auth_token', token);
+
+            // OPTIONAL: Remove token from URL
+            navigate('/dashboard', { replace: true });
+        }
+
+
+    }, [location.search, navigate]);
 
     return (
         <div className="min-h-screen bg-black text-white p-8">

@@ -20,7 +20,6 @@ class GithubController extends Controller
 
         $owner = $request->owner;
         $repo = $request->repo;
-        $token = $request->token;
 
         // Get the authenticated user
         $user = Auth::user();
@@ -29,7 +28,7 @@ class GithubController extends Controller
             $apiURL = "https://api.github.com/repos/$owner/$repo/commits";
             // make the API call to GitHub
             $response = Http::withHeaders([
-                'Authorization' => "Bearer $token",
+                'Authorization' => "Bearer " . $user->github_token,
                 'Accept' => 'application/vnd.github.v3+json',
             ])->get($apiURL);
 
