@@ -46,15 +46,22 @@ export default function Dashboard() {
 
     }, [location.search, navigate]);
 
+    const handleLogout = () =>{
+        // Clear the auth token from local storage
+        localStorage.removeItem('auth_token');
+        // Navigate back to the home page
+        navigate('/', { replace: true });
+    }
+
     return (
         <div className="min-h-screen bg-black text-white p-8">
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-4"> {/* Wrap title and button */}
                     <button
-                        onClick={() => navigate(-1)} // Go back one step in history
+                        onClick={handleLogout} // Go back one step in history
                         className="px-3 py-1 bg-zinc-700 hover:bg-zinc-600 rounded text-sm"
                     >
-                        &larr; Back {/* Left arrow */}
+                        &larr; Log Out {/* Left arrow */}
                     </button>
                     <h1 className="text-4xl">Dashboard</h1>
                 </div>
