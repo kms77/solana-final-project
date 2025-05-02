@@ -41,6 +41,9 @@ export default function Dashboard() {
     const [tokensClaimed, setTokensClaimed] = useState<number>(0);
     const navigate = useNavigate();
 
+    // --- NEW: loading state ---
+    const [loading, setLoading] = useState(true);
+
     // --- NEW STATE for API data ---
     const [commitData, setCommitData] = useState<{ date: Date; count: number }[]>([]);
     const [userProfile, setUserProfile] = useState<{ imageUrl: string; name: string; username: string; memberSince: string }>({
@@ -54,6 +57,7 @@ export default function Dashboard() {
 
     // --- FETCH DATA FROM API (or local file for now) ---
     useEffect(() => {
+        setLoading(true); // Start loading
         GithubService.getGithubRESPONSEUrl()
             .then((data: ApiResponse) => {
                 setCommitData(transformReportData(data.report_data));
@@ -65,7 +69,8 @@ export default function Dashboard() {
                 });
                 setTotalCommits(data.total_commits);
                 setTokensHeld(Math.floor(data.tokens));
-            });
+            })
+            .finally(() => setLoading(false)); // Stop loading when done
     }, []);
 
     const location = useLocation();
@@ -122,6 +127,18 @@ export default function Dashboard() {
 
             {/* Main Grid */}
             <div>
+                {/* Loading Overlay */}
+            {loading && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-95">
+                    <div className="flex flex-col items-center">
+                        {/* Dual Ring Spinner */}
+                        <div className="mb-4">
+                            <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent border-b-transparent rounded-full animate-spin"></div>
+                        </div>
+                        <span className="text-lg text-blue-200 font-semibold">Loading dashboard...</span>
+                    </div>
+                </div>
+            )}
                 {/* Chart Section - Full Width, GitHub-style, no scroll */}
                 <div className="w-full flex flex-col items-center">
                     <div className="relative w-full max-w-7xl">
