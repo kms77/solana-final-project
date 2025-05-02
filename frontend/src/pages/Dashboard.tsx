@@ -1,8 +1,8 @@
 
 import WalletConnect from "../components/WalletConnect"; 
 import ProfileCard from "../components/ProfileCard";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
     date: new Date(Date.now() - (84 - i) * 86400000),
@@ -26,15 +26,42 @@ export default function Dashboard() {
     };
     
 
+    const location = useLocation();
+
+    useEffect(() => {
+        const authToken = localStorage.getItem('auth_token');
+        if (!authToken){
+            navigate('/', { replace: true });
+        }
+        const queryParams = new URLSearchParams(location.search);
+        const token = queryParams.get('token');
+
+        if (token) {
+            localStorage.setItem('auth_token', token);
+
+            // OPTIONAL: Remove token from URL
+            navigate('/dashboard', { replace: true });
+        }
+
+
+    }, [location.search, navigate]);
+
+    const handleLogout = () =>{
+        // Clear the auth token from local storage
+        localStorage.removeItem('auth_token');
+        // Navigate back to the home page
+        navigate('/', { replace: true });
+    }
+
     return (
         <div className="min-h-screen bg-black text-white p-8">
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-4"> {/* Wrap title and button */}
                     <button
-                        onClick={() => navigate(-1)} // Go back one step in history
+                        onClick={handleLogout} // Go back one step in history
                         className="px-3 py-1 bg-zinc-700 hover:bg-zinc-600 rounded text-sm"
                     >
-                        &larr; Back {/* Left arrow */}
+                        &larr; Log Out {/* Left arrow */}
                     </button>
                     <h1 className="text-4xl">Dashboard</h1>
                 </div>
