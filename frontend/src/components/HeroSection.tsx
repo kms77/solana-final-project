@@ -1,13 +1,9 @@
-import { Link } from "react-router-dom";
-import ChevronDownIcon from "./svgs/ChevronDownIcon";
-import GithubIcon from "./svgs/GithubIcon";
 import api from '../api/axios';
 import { useState } from "react";
-// Assuming Button component is created as shown above
-// import Button from './Button'; // Import if using Button component directly
 
 export default function HeroSection() {
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [responseMessage, setResponseMessage] = useState<string>("");
 
     const handleGithubSignIn = async () => {
@@ -17,7 +13,7 @@ export default function HeroSection() {
                 window.location.href = response.data.url;
             }
         } catch (error) {
-            console.error("Error calling /test endpoint:", error);
+            console.error("Error calling endpoint:", error);
             setResponseMessage("Failed to fetch data.");
         }
     };

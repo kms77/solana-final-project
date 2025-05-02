@@ -20,4 +20,5 @@ Route::get('/test', function (Request $request) {
 
 Route::prefix('github')->middleware('auth:sanctum')->group(function () {
     Route::get('/data', [GithubController::class, 'getGithubData']);
+    Route::middleware('auth:sanctum')->post('/claim-tokens', [GithubController::class, 'claimTokens']);
 });
