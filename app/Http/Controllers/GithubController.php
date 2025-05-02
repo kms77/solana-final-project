@@ -13,7 +13,7 @@ class GithubController extends Controller
     {
 
         $owner = "kms77";
-        $repo = "Solana-Demo-Project";
+        $repo = "solana-final-project";
 
         // Get the authenticated user
         $user = Auth::user();
