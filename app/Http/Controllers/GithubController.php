@@ -11,15 +11,9 @@ class GithubController extends Controller
 {
     public function getGithubData(Request $request)
     {
-        // request validation
-        $request->validate([
-            'owner' => 'required|string', // repository owner (username or organization)
-            'repo' => 'required|string', // repository name
-            'token' => 'required|string', // github personal access token
-        ]);
 
-        $owner = $request->owner;
-        $repo = $request->repo;
+        $owner = "kms77";
+        $repo = "Solana-Demo-Project";
 
         // Get the authenticated user
         $user = Auth::user();
