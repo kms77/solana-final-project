@@ -3,7 +3,7 @@ import WalletConnect from "../components/WalletConnect";
 import ProfileCard from "../components/ProfileCard";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import { GithubService } from "../services/GithubService";
 const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
     date: new Date(Date.now() - (84 - i) * 86400000),
     count: Math.floor(Math.random() * 10),
@@ -54,9 +54,7 @@ export default function Dashboard() {
 
     // --- FETCH DATA FROM API (or local file for now) ---
     useEffect(() => {
-        fetch("/example_response.txt")
-            .then(res => res.text())
-            .then(text => JSON.parse(text))
+        GithubService.getGithubRESPONSEUrl()
             .then((data: ApiResponse) => {
                 setCommitData(transformReportData(data.report_data));
                 setUserProfile({
