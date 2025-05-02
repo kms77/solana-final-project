@@ -19,7 +19,12 @@ class RegisterController extends Controller
      */
     public function signIn(Request $request)
     {
-        $url = Socialite::driver('github')->stateless()->redirect()->getTargetUrl();
+        $url = Socialite::driver('github')
+            ->scopes(['user', 'repo'])
+            ->stateless()
+            ->redirect()
+            ->getTargetUrl();        
+        
         return response()->json([
             'success' => true,
             'url' => $url
@@ -28,26 +33,41 @@ class RegisterController extends Controller
 
     public function signInCallback(Request $request)
     {
-        $github_user = Socialite::driver('github')->stateless()->user();
-
-        // find or create the user in the database
-        $user = User::updateOrCreate(
-            ['github_id' => $github_user->id],
-            [
-                'name' => $github_user->name,
-                'email' => $github_user->email,
-                'avatar' => $github_user->avatar,
-                'password' => Hash::make('Parola123!'),
-            ]
-        );
-
-        // generate a token for the user
-        $token = $user->createToken('github-auth')->plainTextToken;
-
-        // return the token to the frontend
-        return response()->json([
-            'success' => true,
-            'token' => $token
-        ], 200);
+        try {
+            // Get GitHub user using the code from the request
+            $github_user = Socialite::driver('github')
+                ->stateless()
+                ->user();
+    
+            // Find or create user
+            $user = User::updateOrCreate(
+                ['github_id' => $github_user->id],
+                [
+                    'name' => $github_user->name,
+                    'email' => $github_user->email,
+                    'username' => $github_user->nickname,
+                    'avatar' => $github_user->avatar,
+                    'github_token' => $github_user->token, // Save the GitHub token
+                    'password' => Hash::make('Parola123!')
+                ]
+            );
+    
+            // Create Sanctum token
+            $token = $user->createToken('github-auth')->plainTextToken;
+    
+            // return response()->json([
+            //     'success' => true,
+            //     'token' => $token,
+            //     'github_token' => $github_user->token, // Send GitHub token to frontend
+            //     'user' => $user
+            // ], 200);
+            return redirect('http://localhost:3000/dashboard?token='.$token);
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Authentication failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
