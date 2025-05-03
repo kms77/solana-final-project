@@ -3,7 +3,7 @@ import WalletConnect from "../components/WalletConnect";
 import ProfileCard from "../components/ProfileCard";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import { GithubService } from "../services/GithubService";
 const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
     date: new Date(Date.now() - (84 - i) * 86400000),
     count: Math.floor(Math.random() * 10),
@@ -11,20 +11,62 @@ const mockCommitData = Array.from({ length: 84 }, (_, i) => ({
 
 const colors = ["#ebf6ff", "#7dd3fc", "#38bdf8", "#0ea5e9", "#0369a1"];
 
+// 1. Define types for the API response
+interface ApiResponse {
+    success: boolean;
+    report_data: { [date: string]: number };
+    user: {
+        name: string;
+        email: string;
+        username: string;
+        avatar: string;
+        since: string;
+    };
+    total_commits: number;
+    tokens: number;
+}
+
+// 2. Utility to transform report_data into an array for the grid
+function transformReportData(report_data: { [date: string]: number }) {
+    // Convert to array of { date: Date, count: number }
+    return Object.entries(report_data).map(([dateStr, count]) => ({
+        date: new Date(dateStr.split("-").reverse().join("-")), // "dd-mm-yyyy" to "yyyy-mm-dd"
+        count,
+    })); 
+}
+
 export default function Dashboard() {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [hoveredWeek, setHoveredWeek] = useState<number | null>(null);
     const [tokensClaimed, setTokensClaimed] = useState<number>(0);
-    const navigate = useNavigate(); // Get navigate function
-    const totalCommits = mockCommitData.reduce((sum, day) => sum + day.count, 0);
-    const [tokensHeld, setTokensHeld] = useState<number>(Math.floor(totalCommits / 10));
-    const userProfile = {
-        imageUrl: "https://www.gravatar.com/avatar/?d=mp&s=120",
-        name: "Moldovan Catalin 🐲",
-        username: "@CataM2k",
-        memberSince: "Member since 20th April, 2025", // This seems like a future date?
-    };
-    
+    const navigate = useNavigate();
+
+    // --- NEW STATE for API data ---
+    const [commitData, setCommitData] = useState<{ date: Date; count: number }[]>([]);
+    const [userProfile, setUserProfile] = useState<{ imageUrl: string; name: string; username: string; memberSince: string }>({
+        imageUrl: "",
+        name: "",
+        username: "",
+        memberSince: "",
+    });
+    const [totalCommits, setTotalCommits] = useState(0);
+    const [tokensHeld, setTokensHeld] = useState(0);
+
+    // --- FETCH DATA FROM API (or local file for now) ---
+    useEffect(() => {
+        GithubService.getGithubRESPONSEUrl()
+            .then((data: ApiResponse) => {
+                setCommitData(transformReportData(data.report_data));
+                setUserProfile({
+                    imageUrl: data.user.avatar,
+                    name: data.user.name,
+                    username: data.user.username,
+                    memberSince: `Member since ${data.user.since}`,
+                });
+                setTotalCommits(data.total_commits);
+                setTokensHeld(Math.floor(data.tokens));
+            });
+    }, []);
 
     const location = useLocation();
 
@@ -75,7 +117,7 @@ export default function Dashboard() {
                 name={userProfile.name}
                 username={userProfile.username}
                 memberSince={userProfile.memberSince}
-                className="mb-10" // Pass margin bottom as className
+                className="mb-10"
             />
 
             {/* Main Grid */}
@@ -171,7 +213,7 @@ export default function Dashboard() {
                                     style={{
                                         gridTemplateRows: "repeat(7, 1fr)",
                                         gridTemplateColumns: "repeat(53, 1fr)",
-                                        height: "168px", // 7 rows * 24px
+                                        height: "168px",
                                     }}
                                 >
                                     {Array.from({ length: 53 }).map(
@@ -179,40 +221,22 @@ export default function Dashboard() {
                                             Array.from({ length: 7 }).map(
                                                 (_, dayIndex) => {
                                                     // Calculate the date for this cell
-                                                    const year =
-                                                        new Date().getFullYear();
-                                                    const startOfYear =
-                                                        new Date(year, 0, 1);
-                                                    const dayOffset =
-                                                        startOfYear.getDay() ===
-                                                        0
-                                                            ? 6
-                                                            : startOfYear.getDay() -
-                                                              1;
-                                                    const cellDate = new Date(
-                                                        startOfYear
-                                                    );
+                                                    const year = new Date().getFullYear();
+                                                    const startOfYear = new Date(year, 0, 1);
+                                                    const dayOffset = startOfYear.getDay() === 0 ? 6 : startOfYear.getDay() - 1;
+                                                    const cellDate = new Date(startOfYear);
                                                     cellDate.setDate(
-                                                        cellDate.getDate() -
-                                                            dayOffset +
-                                                            weekIndex * 7 +
-                                                            dayIndex
+                                                        cellDate.getDate() - dayOffset + weekIndex * 7 + dayIndex
                                                     );
 
-                                                    // Find commit count for this date (mocked for now)
-                                                    const dayData =
-                                                        mockCommitData.find(
-                                                            (d) =>
-                                                                d.date.getFullYear() ===
-                                                                    cellDate.getFullYear() &&
-                                                                d.date.getMonth() ===
-                                                                    cellDate.getMonth() &&
-                                                                d.date.getDate() ===
-                                                                    cellDate.getDate()
-                                                        );
-                                                    const count = dayData
-                                                        ? dayData.count
-                                                        : 0;
+                                                    // --- USE commitData INSTEAD OF mockCommitData ---
+                                                    const dayData = commitData.find(
+                                                        (d) =>
+                                                            d.date.getFullYear() === cellDate.getFullYear() &&
+                                                            d.date.getMonth() === cellDate.getMonth() &&
+                                                            d.date.getDate() === cellDate.getDate()
+                                                    );
+                                                    const count = dayData ? dayData.count : 0;
 
                                             return (
                                                 <div
