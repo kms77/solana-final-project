@@ -24,7 +24,9 @@ class GithubController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer " . $user->github_token,
                 'Accept' => 'application/vnd.github.v3+json',
-            ])->get($apiURL);
+            ])->get($apiURL, [
+                'author' => $user->username
+            ]);
 
         // check if the response is successful
         if ($response->successful()) {
