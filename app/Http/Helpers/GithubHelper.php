@@ -10,13 +10,13 @@ class GithubHelper
     {
         $reportData = [];
 
-        // get the current date and the date of the previous month
-        $currentDate = Carbon::now();
-        $previousMonthDate = Carbon::now()->subYear();
+        // get the current date and the date of the last year
+        $currentDate = Carbon::now()->endOfDay();
+        $previousYear = Carbon::now()->subYear();
 
         // initialize all days in the range with 0 commits
         $dateRange = [];
-        for ($date = $previousMonthDate; $date->lte($currentDate); $date->addDay()) {
+        for ($date = $previousYear; $date->lte($currentDate); $date->addDay()) {
             $formattedDate = $date->format('d-m-Y');
             $dateRange[$formattedDate] = 0;
         }
