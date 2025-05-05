@@ -22,5 +22,5 @@ yarn-error.log
 /.vscode
 /.zed
 github access token.txt
-app/.DS_Store
-app/Http/.DS_Store
+/app/.DS_Store
+/app/Http/.DS_Store
