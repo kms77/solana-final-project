@@ -70,22 +70,4 @@ class GithubController extends Controller
             ], 500);
         }
     }
-    public function claimTokens(Request $request)
-    {
-        $request->validate([
-            'wallet_address' => 'required|string',
-        ]);
-        $user = Auth::user();
-    
-        // 1. Calculate eligible tokens (based on unclaimed contributions)
-        // 2. Send SPL tokens to $request->wallet_address using Solana SDK or microservice
-        // 3. Record claim in DB
-    
-        // Example response:
-        return response()->json([
-            'success' => true,
-            'message' => 'Tokens claimed successfully!',
-            // Optionally: transaction signature, new balance, etc.
-        ]);
-    }
 }
