@@ -52,15 +52,27 @@ export default function HeroSection() {
                         <p className="text-gray-400 text-center mt-4" style={{ opacity: 1 }}>Collaborate seamlessly. Build together.</p>
                     </div>
                 </div>
-                {/* Updated scroll indicator container */}
-                <div className="absolute bottom-10  transform -translate-x-1/2 flex flex-col items-center cursor-pointer" style={{ opacity: 1 }}>
+                {/* Scroll down button */}
+                {/* <button 
+                    type="button"
+                    onClick={() => {
+                        const featuresSection = document.getElementById('features');
+                        if (featuresSection) {
+                            window.scrollTo({
+                                top: featuresSection.offsetTop , // Adjust for any header space
+                                behavior: 'smooth'
+                            });
+                        }
+                    }}
+                    className="absolute bottom-10 transform -translate-x-1/2 flex flex-col items-center group hover:animate-bounce"
+                >
                     <p className="text-gray-400 mb-2 text-sm">Scroll to explore</p>
-                    <div style={{ transform: 'translateY(4.09984px)' }}>
+                    <div className="transition-transform group-hover:translate-y-1">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down text-cyan-400 w-6 h-6">
                             <path d="m6 9 6 6 6-6"></path>
                         </svg>
                     </div>
-                </div>
+                </button> */}
             </section>
         
     );
